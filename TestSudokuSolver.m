@@ -94,18 +94,17 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             
             
             
-            S = testCase.createSudoku;
-            fileID = fopen('Solved Sudoku.txt','w');
-            fprintf(fileID,'%12s\n','Solved Sudokus');
-            %fprintf(fileID,'%f',data);
-            fclose(fileID);
+            unsolved = testCase.createSudoku;
+            
             
             try
                 validdata = true;
-                data = sudoku(S);
+                Solved = sudoku(unsolved);
+                stringSolved = Solved.SudokuPuzzle;
+                
             catch ME
                 validdata = false;
-                A = mat2str(S);
+                A = mat2str(unsolved);
                 cprintf('r','\n%s \n%s',ME.message, A);
                 
                 switch ME.message
@@ -118,13 +117,24 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                 end
             end
             
-            txt = sprintf('TestSudokuSolver:testConstructorArguments: \n%d',S);
+            txt = sprintf('TestSudokuSolver:testConstructorArguments: \n%s',stringSolved);
             
             if validdata
                 testCase.numOfvalidSolutions = testCase.numOfvalidSolutions + 1;
-                disp(data)
-                testCase.verifyTrue(isa(data,'sudoku'));
-                testCase.verifyTrue(ismatrix(data.GetMatrix),txt);
+                disp(stringSolved)
+                testCase.verifyTrue(isa(Solved,'sudoku'));
+                testCase.verifyTrue(ismatrix(Solved.GetMatrix),txt);
+                existf = true;
+                if exist('Solved Sudoku.txt','file')
+                    existf = false;
+                end
+                fileID = fopen('Solved Sudoku.txt','a');
+                
+                if existf
+                    fprintf(fileID,'%12s\n','Solved Sudokus');
+                end
+                fprintf(fileID,'%s\n',stringSolved);
+                fclose(fileID);
             end
             
         end
@@ -137,7 +147,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         
             % math goes here for creation
             
-            numberRemovals = testCase.numberRemovals;
+            numberRemovals = 20;
             ir = 1:9;
             ic = reshape(ir,3,3)';
             A = 1 + mod(bsxfun(@plus,ir,ic(:)),9);

@@ -51,7 +51,7 @@ classdef sudoku
         %
         %   Outputs: void
         
-            fprintf('%d',obj.Sudoku);
+            fprintf('%s',obj.Sudoku);
         
         end
     
@@ -97,6 +97,7 @@ classdef sudoku
             end
             
             Solution=Solution(:,:,2:end);
+            Solution = mat2str(Solution);
         end
 
         % ----------
@@ -123,6 +124,7 @@ classdef sudoku
             
             imp=all(impall);
             M=Q;
+            disp(M)
         end
 
         % ----------
@@ -176,6 +178,7 @@ classdef sudoku
                         v=find(N(r,c,:));
                         if length(v)==1
                             M(r,c)=v;
+                          
                         end
                     end
                 end
@@ -185,6 +188,7 @@ classdef sudoku
                         c=find(N(r,:,v));
                         if length(c)==1
                             M(r,c)=v;
+                            
                         end
                     end
                 end
@@ -194,6 +198,7 @@ classdef sudoku
                         r=find(N(:,c,v));
                         if length(r)==1
                             M(r,c)=v;
+                            
                         end
                     end
                 end
@@ -205,6 +210,7 @@ classdef sudoku
                             [pr,pc]=find(Q);
                             if length(pr)==1
                                 M(r+pr-1,c+pc-1)=v;
+                                
                             end
                         end
                     end
