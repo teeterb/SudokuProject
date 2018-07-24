@@ -79,13 +79,13 @@ classdef sudoku
     
             if ndims(M)~=2
                 assert(false,'sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
+            
+            elseif any((size(M)-[9 9])~=0)
+                assert(false,'sudoku:solveSudoku:Assertion Input matrix must have nine rows and nine columns.')
+            
+            elseif any(any(M~=floor(M))) || any(abs(M(:)-4.5)>4.5)
+                assert(false,'sudoku:solveSudoku:AssertionOnly integers from zero to nine are permitted as input.')
             end
-%             if any((size(M)-[9 9])~=0)
-%                 error('Input matrix must have nine rows and nine columns.')
-%             end
-%             if any(any(M~=floor(M))) || any(abs(M(:)-4.5)>4.5)
-%                 error('Only integers from zero to nine are permitted as input.')
-%             end
 
         % ----------
             Solution=0*M; % clear out the solution matrix

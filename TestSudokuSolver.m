@@ -114,6 +114,10 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                         testCase.numOfNoSolutions = testCase.numOfNoSolutions + 1;
                     case char('sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
                         testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    case char('sudoku:solveSudoku:Assertion Input matrix must have nine rows and nine columns.')
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    case char('sudoku:solveSudoku:AssertionOnly integers from zero to nine are permitted as input.')
+                         testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
                     otherwise
                         rethrow(ME);
                 end
