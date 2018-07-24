@@ -153,7 +153,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         
             % math goes here for creation
             
-            numberRemovals = 20;
+            numberRemovals = 30;
             ir = 1:9;
             ic = reshape(ir,3,3)';
             A = 1 + mod(bsxfun(@plus,ir,ic(:)),9);

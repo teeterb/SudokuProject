@@ -88,8 +88,9 @@ classdef sudoku
             end
 
         % ----------
-            Solution=0*M; % clear out the solution matrix
+            
             if ismatrix(M)
+                Solution=0*M; % clear out the solution matrix
                 [M,imp,Solution]=obj.recurse(M,Solution); %#ok need this syntax for recursion
                 
             else 
