@@ -20,19 +20,7 @@ classdef sudoku
         SudokuPuzzle;
     end
     
-    %           *--------------ERROR MESSAGES-------------*
     
-    % if ndims(M)~=2
-    %     error('Input matrix must be two dimensional.')
-    % end
-    % if any((size(M)-[9 9])~=0)
-    %     error('Input matrix must have nine rows and nine columns.')
-    % end
-    % if any(any(M~=floor(M))) || any(abs(M(:)-4.5)>4.5)
-    %     error('Only integers from zero to nine are permitted as input.')
-    % end
-
-    % ----------
     methods
         function obj = sudoku(Matrix)
             
@@ -87,7 +75,19 @@ classdef sudoku
     methods(Access = protected)
         function Solution = solveSudoku(obj,M)
         % main program:
-            
+            %           *--------------ERROR MESSAGES-------------*
+    
+            if ndims(M)~=2
+                assert(false,'sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
+            end
+%             if any((size(M)-[9 9])~=0)
+%                 error('Input matrix must have nine rows and nine columns.')
+%             end
+%             if any(any(M~=floor(M))) || any(abs(M(:)-4.5)>4.5)
+%                 error('Only integers from zero to nine are permitted as input.')
+%             end
+
+        % ----------
             Solution=0*M; % clear out the solution matrix
             if ismatrix(M)
                 [M,imp,Solution]=obj.recurse(M,Solution); %#ok need this syntax for recursion

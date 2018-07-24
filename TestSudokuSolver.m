@@ -9,7 +9,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
        symbols;
        invalidsymbols;
        
-       numOfNONmatrix;
+       numOfvalidmatrixErrors;
        numOfNoSolutions;
        numOfvalidSolutions;
     end
@@ -28,7 +28,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             
                 testCase.symbols = '0':'9';
                 
-                testCase.numOfNONmatrix = 0;
+                testCase.numOfvalidmatrixErrors = 0;
                 testCase.numOfNoSolutions = 0;
                 testCase.numOfvalidSolutions = 0;
                 %put the initialization of error vars here
@@ -52,7 +52,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         %
             
             %using fprintf print the number of each type of error]
-            fprintf('\nNumber of NonMatrix errors = %g\n',testCase.numOfNONmatrix);
+            fprintf('\nNumber of NonMatrix errors = %g\n',testCase.numOfvalidmatrixErrors);
             fprintf('Number of no solution errors = %g\n',testCase.numOfNoSolutions);
             
         end       
@@ -109,9 +109,11 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                 
                 switch ME.message
                     case char('sudoku:solveSudoku:Assertion Not a Matrix')
-                        testCase.numOfNONmatrix = testCase.numOfNONmatrix + 1;
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
                     case char('sudoku:recurse:Assertion No possible solution')
                         testCase.numOfNoSolutions = testCase.numOfNoSolutions + 1;
+                    case char('sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
                     otherwise
                         rethrow(ME);
                 end
