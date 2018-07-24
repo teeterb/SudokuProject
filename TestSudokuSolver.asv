@@ -25,6 +25,9 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             
                 testCase.symbols = '0':'9';
                 
+                testCase.numOfNONmatrix = 0;
+                testCase.numOfNoSolutions = 0;
+                testCase.numOfvalidSolutions = 0;
                 %put the initialization of error vars here
                 
                 clc
@@ -45,7 +48,9 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         % Syntax: reportErrors(testCase)
         %
             
-            %using fprintf print the number of each type of error
+            %using fprintf print the number of each type of error]
+            fprintf('\nNumber of NonMatrix errors = %g\n',testCase.numOfNONmatrix);
+            fprintf('Number of no solution errors = %g\n',testCase.numOfNoSolutions);
             
         end       
     end
@@ -84,19 +89,35 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             %And this is where all the asserts go, read studentdata class
             %for more info on using ME messages.
             
-            S = testCase.createSudoku;
+            
             data = sudoku(S);
             fileID = fopen('Solved Sudoku.txt','w');
             fprintf(fileID,'%12s\n','Solved Sudokus');
-%             fprintf(fileID,'%f',data);
-            formatSpec = '%d\n
-            [nrows, ncols] = size(data);
-            for row = 1:nrows
-                fprintf(fileID,formatS
+            %fprintf(fileID,'%f',data);
             fclose(fileID);
-          
             
+            try
+                validdata = true;
+                S = testCase.createSudoku;
+            catch
+                validata = false;
+                cprint('r','\n%d',ME.message, S);
+                
+                switch ME.message
+                    case char('Sudoku:solveSudoku:Assertion Not a Matrix')
+                        testCase.numOfNONmatrix = numOfNONmatrix + 1;
+                    case char('Sudoku:recurse:Assertion No possible solution')
+                        testCase.numOfNoSolutions = numOfNoSolutions + 1;
+                    otherwise
+                        rethrow(ME);
+                end
+            end
             
+            if validdata
+                testCase.numOfvalidSolutions = testCase.numOfvalidSolutions + 1;
+                disp(data)
+                testCase
+            end
         end
     end
     
@@ -107,7 +128,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         
             % math goes here for creation
             
-            numberRemovals = 25;
+            numberRemovals = testCase.numberRemovals;
             ir = 1:9;
             ic = reshape(ir,3,3)';
             A = 1 + mod(bsxfun(@plus,ir,ic(:)),9);

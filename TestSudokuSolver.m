@@ -8,7 +8,10 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
        M = [];
        symbols;
        invalidsymbols;
-        
+       
+       numOfNONmatrix;
+       numOfNoSolutions;
+       numOfvalidSolutions;
     end
     
     methods (TestMethodSetup)
@@ -25,6 +28,9 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             
                 testCase.symbols = '0':'9';
                 
+                testCase.numOfNONmatrix = 0;
+                testCase.numOfNoSolutions = 0;
+                testCase.numOfvalidSolutions = 0;
                 %put the initialization of error vars here
                 
                 clc
@@ -45,7 +51,9 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         % Syntax: reportErrors(testCase)
         %
             
-            %using fprintf print the number of each type of error
+            %using fprintf print the number of each type of error]
+            fprintf('\nNumber of NonMatrix errors = %g\n',testCase.numOfNONmatrix);
+            fprintf('Number of no solution errors = %g\n',testCase.numOfNoSolutions);
             
         end       
     end
@@ -84,14 +92,40 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             %And this is where all the asserts go, read studentdata class
             %for more info on using ME messages.
             
+            
+            
             S = testCase.createSudoku;
-            data = sudoku(S);
             fileID = fopen('Solved Sudoku.txt','w');
             fprintf(fileID,'%12s\n','Solved Sudokus');
             %fprintf(fileID,'%f',data);
             fclose(fileID);
-          
             
+            try
+                validdata = true;
+                data = sudoku(S);
+            catch ME
+                validdata = false;
+                A = mat2str(S);
+                cprintf('r','\n%s \n%s',ME.message, A);
+                
+                switch ME.message
+                    case char('sudoku:solveSudoku:Assertion Not a Matrix')
+                        testCase.numOfNONmatrix = testCase.numOfNONmatrix + 1;
+                    case char('sudoku:recurse:Assertion No possible solution')
+                        testCase.numOfNoSolutions = testCase.numOfNoSolutions + 1;
+                    otherwise
+                        rethrow(ME);
+                end
+            end
+            
+            txt = sprintf('TestSudokuSolver:testConstructorArguments: \n%d',S);
+            
+            if validdata
+                testCase.numOfvalidSolutions = testCase.numOfvalidSolutions + 1;
+                disp(data)
+                testCase.verifyTrue(isa(data,'sudoku'));
+                testCase.verifyTrue(ismatrix(data.GetMatrix),txt);
+            end
             
         end
     end

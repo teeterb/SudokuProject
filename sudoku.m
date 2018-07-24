@@ -93,7 +93,7 @@ classdef sudoku
                 [M,imp,Solution]=obj.recurse(M,Solution); %#ok need this syntax for recursion
                 
             else 
-                error('Not a Matrix')
+                assert(false,'sudoku:solveSudoku:Assertion Not a Matrix')
             end
             
             Solution=Solution(:,:,2:end);
@@ -106,7 +106,7 @@ classdef sudoku
         %clc;disp(M);pause(.1)
             [M,imp]=obj.deduce(M); % perform deterministic deductions
             if imp % if impossible, quit
-                error('No Solution')
+                assert(false,'sudoku:recurse:Assertion No possible solution')
             end
         
             z=find(~M(:)); % indices of unsolved entries
