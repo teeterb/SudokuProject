@@ -88,7 +88,11 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             data = sudoku(S);
             fileID = fopen('Solved Sudoku.txt','w');
             fprintf(fileID,'%12s\n','Solved Sudokus');
-            %fprintf(fileID,'%f',data);
+%             fprintf(fileID,'%f',data);
+            formatSpec = '%d\n
+            [nrows, ncols] = size(data);
+            for row = 1:nrows
+                fprintf(fileID,formatS
             fclose(fileID);
           
             
@@ -103,7 +107,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         
             % math goes here for creation
             
-            numberRemovals = testCase.numberRemovals;
+            numberRemovals = 25;
             ir = 1:9;
             ic = reshape(ir,3,3)';
             A = 1 + mod(bsxfun(@plus,ir,ic(:)),9);
