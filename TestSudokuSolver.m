@@ -125,10 +125,10 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                 testCase.verifyTrue(isa(Solved,'sudoku'));
                 testCase.verifyTrue(ismatrix(Solved.GetMatrix),txt);
                 existf = true;
-                if exist('Solved Sudoku.txt','file')
+                if exist('SolvedSudoku.txt','file')
                     existf = false;
                 end
-                fileID = fopen('Solved Sudoku.txt','a');
+                fileID = fopen('SolvedSudoku.txt','a');
                 
                 if existf
                     fprintf(fileID,'%12s\n','Solved Sudokus');
