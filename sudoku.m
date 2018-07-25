@@ -138,9 +138,9 @@ classdef sudoku < handle
             end
             
             Solution=Solution(:,:,2:end);
-
-            Solution1 = Solution(:,:,1);
-            %obj.createGrid(Solution1);
+            
+%             Solution1 = Solution(:,:,1);
+%             obj.createGrid(Solution1);
             return
         end
 

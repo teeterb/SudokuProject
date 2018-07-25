@@ -181,8 +181,8 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             A = 1 + mod((ir+ic(:)),9);
             p = randperm(9,9);
             
-            r = bsxfun(@plus,randperm(3,3),3*(randperm(3,3)-1)');
-            c = bsxfun(@plus,randperm(3,3),3*(randperm(3,3)-1)');
+            r = (randperm(3,3)+3*(randperm(3,3)-1)');
+            c = (randperm(3,3)+3*(randperm(3,3)-1)');
             
             %permutations
             A = p(A);
