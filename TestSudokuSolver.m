@@ -8,6 +8,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
        M = [];
        symbols;
        invalidsymbols;
+       defLength;
        
        numOfvalidmatrixErrors;
        numOfNoSolutions;
@@ -27,6 +28,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             % Syntax: createSymbols(testCase)
             
                 testCase.symbols = '0':'9';
+                testCase.defLength = 9;
                 
                 testCase.numOfvalidmatrixErrors = 0;
                 testCase.numOfNoSolutions = 0;
@@ -82,62 +84,65 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         testCase.verifyTrue(ismatrix(N.GetMatrix),text);
         
         end 
-%         
-%         function testConstructorArguments(testCase)
-%         %% testConstructorArguments
-%         % Tests class by creating multiple matrices that are both valid and
-%         % invalid puzzles to test the handling of it.
-%         % Input: testCase   TestSudokuSolver handle to instance of class
-%         %                   TestSudokuSolver
-%         % 
-%         % Output: void
-%         % 
-%         % Syntax: testConstructorArguments(testCase)    
-%         
-%             %here we would call the create matrix function
-%             %testCase.MatrixCreater.
-%             
-%             %And this is where all the asserts go, read studentdata class
-%             %for more info on using ME messages.
-%             
-%             
-%             
-%             unsolved = testCase.createSudoku;
-%             
-%             
-%             try
-%                 validdata = true;
-%                 Solved = sudoku(unsolved);
-%                 stringSolved = Solved.SudokuPuzzle;
-%                 
-%             catch ME
-%                 validdata = false;
-%                 A = mat2str(unsolved);
-%                 cprintf('r','\n%s \n%s',ME.message, A);
-%                 
-%                 switch ME.message
-%                     case char('sudoku:solveSudoku:Assertion Not a Matrix')
-%                         testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
-%                     case char('sudoku:recurse:Assertion No possible solution')
-%                         testCase.numOfNoSolutions = testCase.numOfNoSolutions + 1;
-%                     case char('sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
-%                         testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
-%                     case char('sudoku:solveSudoku:Assertion Input matrix must have nine rows and nine columns.')
-%                         testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
-%                     case char('sudoku:solveSudoku:AssertionOnly integers from zero to nine are permitted as input.')
-%                          testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
-%                     otherwise
-%                         rethrow(ME);
-%                 end
-%             end
-%             
-%             txt = sprintf('TestSudokuSolver:testConstructorArguments: \n%s',stringSolved);
-%             
-%             if validdata
-%                 testCase.numOfvalidSolutions = testCase.numOfvalidSolutions + 1;
-%                 disp(stringSolved)
-%                 testCase.verifyTrue(isa(Solved,'sudoku'));
-%                 testCase.verifyTrue(ismatrix(Solved.GetMatrix),txt);
+        
+        function testConstructorArguments(testCase)
+        %% testConstructorArguments
+        % Tests class by creating multiple matrices that are both valid and
+        % invalid puzzles to test the handling of it.
+        % Input: testCase   TestSudokuSolver handle to instance of class
+        %                   TestSudokuSolver
+        % 
+        % Output: void
+        % 
+        % Syntax: testConstructorArguments(testCase)    
+        
+            %here we would call the create matrix function
+            %testCase.MatrixCreater.
+            
+            %And this is where all the asserts go, read studentdata class
+            %for more info on using ME messages.
+            
+            
+            
+            unsolved = testCase.createSudoku;
+            
+            
+            try
+                validdata = true;
+                Solved = sudoku(unsolved);
+            catch ME
+                validdata = false;
+                cprintf('r','\n%s \n',ME.message);
+                
+                switch ME.message
+                    case char('sudoku:solveSudoku:Assertion Not a Matrix')
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    case char('sudoku:recurse:Assertion No possible solution')
+                        testCase.numOfNoSolutions = testCase.numOfNoSolutions + 1;
+                    case char('sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    case char('sudoku:solveSudoku:Assertion Input matrix must have nine rows and nine columns.')
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    case char('sudoku:solveSudoku:AssertionOnly integers from zero to nine are permitted as input.')
+                         testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    otherwise
+                        rethrow(ME);
+                end
+            end
+            
+            txt = sprintf('TestSudokuSolver:testConstructorArguments: \n');
+            
+            if validdata
+                testCase.numOfvalidSolutions = testCase.numOfvalidSolutions + 1;
+               
+                testCase.verifyTrue(isa(Solved,'sudoku'));
+                A = Solved.GetMatrix;
+                sizeA = size(A,3);
+                for sizeSolved = 1:size(A,3)
+                    testCase.verifyTrue(ismatrix(A(1:9,1:9,sizeSolved)),txt);
+                end
+                
+                
 %                 existf = true;
 %                 if exist('SolvedSudoku.txt','file')
 %                     existf = false;
@@ -147,11 +152,12 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
 %                 if existf
 %                     fprintf(fileID,'%12s\n','Solved Sudokus');
 %                 end
-%                 fprintf(fileID,'%s\n',stringSolved);
+%                 
+%                 fprintf(fileID,'%f\n',Solved);
 %                 fclose(fileID);
-%             end
-%             
-%         end
+            end
+            
+        end
     end
     
     methods(Access = private)
@@ -198,7 +204,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         end
         
         function num = numberRemovals(testCase)
-            
+            gameDifficulty = testCase.defLength/3;
             switch randi(3)
                 case 1
                     num = 36;
@@ -216,7 +222,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         % Creates an invalid puzzle, to test how the class handles it. 
         %
         
-            % math goes here for creation
+           % M = testCase.createSudoku;
         end
     end
     

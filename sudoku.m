@@ -73,7 +73,7 @@ classdef sudoku
         end
     end
     methods(Access = protected)
-        function [Solution,nsize] = solveSudoku(obj,M)
+        function Solution = solveSudoku(obj,M)
         % main program:
             %           *--------------ERROR MESSAGES-------------*
     
@@ -100,8 +100,7 @@ classdef sudoku
             end
             
             Solution=Solution(:,:,2:end);
-            nsize = size(Solution);
-            %Solution = mat2str(Solution);
+           
             return
         end
 
