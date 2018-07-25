@@ -205,7 +205,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         
         function num = numberRemovals(testCase)
             gameDifficulty = testCase.defLength/3;
-            switch randi(3)
+            switch randi(gameDifficulty)
                 case 1
                     num = 36;
                 case 2
@@ -222,7 +222,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         % Creates an invalid puzzle, to test how the class handles it. 
         %
         
-           % M = testCase.createSudoku;
+           M = testCase.createSudoku;
         end
     end
     
