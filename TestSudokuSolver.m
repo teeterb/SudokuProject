@@ -56,6 +56,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             %using fprintf print the number of each type of error]
             fprintf('\nNumber of NonMatrix errors = %g\n',testCase.numOfvalidmatrixErrors);
             fprintf('Number of no solution errors = %g\n',testCase.numOfNoSolutions);
+            fprintf('Number of valid Solutions = %g\n',testCase.numOfvalidSolutions);
             
         end       
     end
@@ -139,6 +140,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                 testCase.verifyTrue(isa(Solved,'sudoku'));
                 A = Solved.GetMatrix;
                 sizeA = size(A,3);
+                testCase.numOfvalidSolutions = sizeA;
                 for sizeSolved = 1:size(A,3)
                     
                     if sizeSolved < 10
@@ -159,11 +161,9 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                 if existf
                     fprintf(fileID,'%12s\n','Solved Sudokus');
                 end
-                %for sizeSolved = 1:size(A,3)
-                    
-%                     A = mat2str(A(:,:,1));
-                    fprintf(fileID,'%f\n',A);
-                %end
+                S = A(1:9,1:9,1);
+                fprintf(fileID,'\n\n-Newest Solution-\n');
+                fprintf(fileID,'\n%d %d %d %d %d %d %d %d %d',S);
                 fclose(fileID);
             end
             

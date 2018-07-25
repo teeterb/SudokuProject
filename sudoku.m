@@ -73,6 +73,11 @@ classdef sudoku
         end
     end
     methods(Access = protected)
+        function createGrid(obj)
+            
+            
+        end
+        
         function Solution = solveSudoku(obj,M)
         % main program:
             %           *--------------ERROR MESSAGES-------------*
