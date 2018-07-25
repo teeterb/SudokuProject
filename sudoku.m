@@ -1,4 +1,4 @@
-classdef sudoku
+classdef sudoku < handle
 % SUDOKU - rapidly find all possible solutions to a sudoku puzzle
 % 
 % Usage: Mout = sudoku(M)
@@ -18,13 +18,15 @@ classdef sudoku
     properties(Access = public) 
        
         SudokuPuzzle;
+        title;
+        MatrixGrid;
     end
     
     
     methods
         function obj = sudoku(Matrix)
             
-           obj.SudokuPuzzle = obj.solveSudoku(Matrix); 
+           obj.SudokuPuzzle = obj.solveSudoku(Matrix);
            
         end
         
@@ -73,8 +75,17 @@ classdef sudoku
         end
     end
     methods(Access = protected)
+        
         function createGrid(obj)
-            
+            Window=get(0,'ScreenSize');
+            display=figure('Name','Sudoku','NumberTitle','off','Resize','on','menubar','none',...
+                'Units','pixels','position',[1.85*(Window(4)-700),1.85*(Window(4)-700),600,600]);
+
+            %The title textbox
+            obj.title = uicontrol('Style', 'text', 'unit', 'pixels', 'string', 'Sudoku',...
+            'Position',[0 550  550 30], 'Horizontalalignment', 'center',...
+            'FontSize',20, 'foregroundcolor','k','FontName', 'constantia',...
+            'FontWeight', 'normal');
             
         end
         
