@@ -81,6 +81,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
              0 5 0 0 4 0 0 2 0;0 0 0 8 0 0 0 3 0;6 0 0 1 0 0 0 4 0];
         N = sudoku(N);
         text = sprintf('TestSudokuSolver: testConstructor\n');
+        %need a testCase here to test for all non-zero
         testCase.verifyTrue(ismatrix(N.GetMatrix),text);
         
         end 
@@ -139,22 +140,31 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                 A = Solved.GetMatrix;
                 sizeA = size(A,3);
                 for sizeSolved = 1:size(A,3)
-                    testCase.verifyTrue(ismatrix(A(1:9,1:9,sizeSolved)),txt);
+                    
+                    if sizeSolved < 10
+                        testCase.verifyTrue(ismatrix(A(1:9,1:9,sizeSolved)),txt);
+                    else
+                        testCase.verifyTrue(ismatrix(A(1:9,1:9,10)),txt);
+                    end
+                        
                 end
+                %verify true that its all non-zero
                 
+                existf = true;
+                if exist('SolvedSudoku.txt','file')
+                    existf = false;
+                end
+                fileID = fopen('SolvedSudoku.txt','a');
                 
-%                 existf = true;
-%                 if exist('SolvedSudoku.txt','file')
-%                     existf = false;
-%                 end
-%                 fileID = fopen('SolvedSudoku.txt','a');
-%                 
-%                 if existf
-%                     fprintf(fileID,'%12s\n','Solved Sudokus');
-%                 end
-%                 
-%                 fprintf(fileID,'%f\n',Solved);
-%                 fclose(fileID);
+                if existf
+                    fprintf(fileID,'%12s\n','Solved Sudokus');
+                end
+                %for sizeSolved = 1:size(A,3)
+                    
+%                     A = mat2str(A(:,:,1));
+                    fprintf(fileID,'%f\n',A);
+                %end
+                fclose(fileID);
             end
             
         end
@@ -167,7 +177,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         
             % math goes here for creation
             
-            numberRemovals = testCase.numberRemovals;
+            
             ir = 1:9;
             ic = reshape(ir,3,3)';
             A = 1 + mod(bsxfun(@plus,ir,ic(:)),9);
@@ -188,6 +198,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             end
             
             %remove numbers
+            numberRemovals = testCase.numberRemovals;
             removed = 0;
             while removed ~= numberRemovals
                 for r = randi(9)

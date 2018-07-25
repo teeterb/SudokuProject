@@ -107,8 +107,8 @@ classdef sudoku
         % ----------
         
         % recursive guess algorithm:
-        function [M,imp,Solution]=recurse(obj,M,Solution)
-        %clc;disp(M);pause(.1)
+        function [M,imp,Solution] = recurse(obj,M,Solution)
+        % clc;disp(M);pause(.1)
             [M,imp]=obj.deduce(M); % perform deterministic deductions
             if imp % if impossible, quit
                 return
