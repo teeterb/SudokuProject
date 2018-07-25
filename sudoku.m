@@ -20,19 +20,7 @@ classdef sudoku
         SudokuPuzzle;
     end
     
-    %           *--------------ERROR MESSAGES-------------*
     
-    % if ndims(M)~=2
-    %     error('Input matrix must be two dimensional.')
-    % end
-    % if any((size(M)-[9 9])~=0)
-    %     error('Input matrix must have nine rows and nine columns.')
-    % end
-    % if any(any(M~=floor(M))) || any(abs(M(:)-4.5)>4.5)
-    %     error('Only integers from zero to nine are permitted as input.')
-    % end
-
-    % ----------
     methods
         function obj = sudoku(Matrix)
             
@@ -87,17 +75,33 @@ classdef sudoku
     methods(Access = protected)
         function Solution = solveSudoku(obj,M)
         % main program:
+            %           *--------------ERROR MESSAGES-------------*
+    
+            if ndims(M)~=2
+                assert(false,'sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
             
-            Solution=0*M; % clear out the solution matrix
+            elseif any((size(M)-[9 9])~=0)
+                assert(false,'sudoku:solveSudoku:Assertion Input matrix must have nine rows and nine columns.')
+            
+            elseif any(any(M~=floor(M))) || any(abs(M(:)-4.5)>4.5)
+                assert(false,'sudoku:solveSudoku:AssertionOnly integers from zero to nine are permitted as input.')
+            end
+
+        % ----------
+            
             if ismatrix(M)
+                Solution=0*M; % clear out the solution matrix
                 [M,imp,Solution]=obj.recurse(M,Solution); %#ok need this syntax for recursion
-                
+                if imp % if impossible, quit
+                    assert(false,'sudoku:recurse:Assertion No possible solution')
+                end
             else 
                 assert(false,'sudoku:solveSudoku:Assertion Not a Matrix')
             end
             
             Solution=Solution(:,:,2:end);
-            Solution = mat2str(Solution);
+           
+            return
         end
 
         % ----------
@@ -107,7 +111,7 @@ classdef sudoku
         %clc;disp(M);pause(.1)
             [M,imp]=obj.deduce(M); % perform deterministic deductions
             if imp % if impossible, quit
-                assert(false,'sudoku:recurse:Assertion No possible solution')
+                return
             end
         
             z=find(~M(:)); % indices of unsolved entries
@@ -124,7 +128,7 @@ classdef sudoku
             
             imp=all(impall);
             M=Q;
-            disp(M)
+            return
         end
 
         % ----------
@@ -146,13 +150,13 @@ classdef sudoku
                 end
                 if any(any(sum(N,3)<1))
                     imp=1; % impossible flag (no solution)
-                
+                    return
                 end
                 [r,c]=find(sum(N,3)<2); % solved entries
                 for n=1:length(r)
                     if any(any(sum(N,3)<1))
                         imp=1; %impossible flag (no solution)
-                        
+                        return
                     end
                     v = find(N(r(n),c(n),:)); % value of the entry
                     if isempty(v)
@@ -216,6 +220,7 @@ classdef sudoku
                     end
                 end
             end
+            return
         end
     end
 end

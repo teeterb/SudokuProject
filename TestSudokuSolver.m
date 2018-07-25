@@ -8,8 +8,9 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
        M = [];
        symbols;
        invalidsymbols;
+       defLength;
        
-       numOfNONmatrix;
+       numOfvalidmatrixErrors;
        numOfNoSolutions;
        numOfvalidSolutions;
     end
@@ -27,8 +28,9 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             % Syntax: createSymbols(testCase)
             
                 testCase.symbols = '0':'9';
+                testCase.defLength = 9;
                 
-                testCase.numOfNONmatrix = 0;
+                testCase.numOfvalidmatrixErrors = 0;
                 testCase.numOfNoSolutions = 0;
                 testCase.numOfvalidSolutions = 0;
                 %put the initialization of error vars here
@@ -52,7 +54,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         %
             
             %using fprintf print the number of each type of error]
-            fprintf('\nNumber of NonMatrix errors = %g\n',testCase.numOfNONmatrix);
+            fprintf('\nNumber of NonMatrix errors = %g\n',testCase.numOfvalidmatrixErrors);
             fprintf('Number of no solution errors = %g\n',testCase.numOfNoSolutions);
             
         end       
@@ -72,7 +74,15 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             %Here is the constructor, basically creating an easy sudoku to 
             %solve that we know the answer to,  to test the class's ability
             %to read numbers, char, and string if needed. 
+            % % find the unique solution to this puzzle in a fraction of a second:
             
+        N = [0 0 8 0 9 0 5 0 0;0 0 1 0 7 0 4 0 0;0 0 4 0 3 0 6 0 0;
+             0 1 0 0 0 6 0 0 7;0 9 0 0 0 3 0 0 0;0 2 0 0 5 0 0 6 0;
+             0 5 0 0 4 0 0 2 0;0 0 0 8 0 0 0 3 0;6 0 0 1 0 0 0 4 0];
+        N = sudoku(N);
+        text = sprintf('TestSudokuSolver: testConstructor\n');
+        testCase.verifyTrue(ismatrix(N.GetMatrix),text);
+        
         end 
         
         function testConstructorArguments(testCase)
@@ -100,41 +110,51 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             try
                 validdata = true;
                 Solved = sudoku(unsolved);
-                stringSolved = Solved.SudokuPuzzle;
-                
             catch ME
                 validdata = false;
-                A = mat2str(unsolved);
-                cprintf('r','\n%s \n%s',ME.message, A);
+                cprintf('r','\n%s \n',ME.message);
                 
                 switch ME.message
                     case char('sudoku:solveSudoku:Assertion Not a Matrix')
-                        testCase.numOfNONmatrix = testCase.numOfNONmatrix + 1;
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
                     case char('sudoku:recurse:Assertion No possible solution')
                         testCase.numOfNoSolutions = testCase.numOfNoSolutions + 1;
+                    case char('sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    case char('sudoku:solveSudoku:Assertion Input matrix must have nine rows and nine columns.')
+                        testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
+                    case char('sudoku:solveSudoku:AssertionOnly integers from zero to nine are permitted as input.')
+                         testCase.numOfvalidmatrixErrors = testCase.numOfvalidmatrixErrors + 1;
                     otherwise
                         rethrow(ME);
                 end
             end
             
-            txt = sprintf('TestSudokuSolver:testConstructorArguments: \n%s',stringSolved);
+            txt = sprintf('TestSudokuSolver:testConstructorArguments: \n');
             
             if validdata
                 testCase.numOfvalidSolutions = testCase.numOfvalidSolutions + 1;
-                disp(stringSolved)
+               
                 testCase.verifyTrue(isa(Solved,'sudoku'));
-                testCase.verifyTrue(ismatrix(Solved.GetMatrix),txt);
-                existf = true;
-                if exist('SolvedSudoku.txt','file')
-                    existf = false;
+                A = Solved.GetMatrix;
+                sizeA = size(A,3);
+                for sizeSolved = 1:size(A,3)
+                    testCase.verifyTrue(ismatrix(A(1:9,1:9,sizeSolved)),txt);
                 end
-                fileID = fopen('SolvedSudoku.txt','a');
                 
-                if existf
-                    fprintf(fileID,'%12s\n','Solved Sudokus');
-                end
-                fprintf(fileID,'%s\n',stringSolved);
-                fclose(fileID);
+                
+%                 existf = true;
+%                 if exist('SolvedSudoku.txt','file')
+%                     existf = false;
+%                 end
+%                 fileID = fopen('SolvedSudoku.txt','a');
+%                 
+%                 if existf
+%                     fprintf(fileID,'%12s\n','Solved Sudokus');
+%                 end
+%                 
+%                 fprintf(fileID,'%f\n',Solved);
+%                 fclose(fileID);
             end
             
         end
@@ -147,7 +167,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         
             % math goes here for creation
             
-            numberRemovals = 20;
+            numberRemovals = testCase.numberRemovals;
             ir = 1:9;
             ic = reshape(ir,3,3)';
             A = 1 + mod(bsxfun(@plus,ir,ic(:)),9);
@@ -184,8 +204,8 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         end
         
         function num = numberRemovals(testCase)
-            
-            switch randi(3)
+            gameDifficulty = testCase.defLength/3;
+            switch randi(gameDifficulty)
                 case 1
                     num = 36;
                 case 2
@@ -202,7 +222,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         % Creates an invalid puzzle, to test how the class handles it. 
         %
         
-            % math goes here for creation
+           M = testCase.createSudoku;
         end
     end
     
