@@ -73,7 +73,7 @@ classdef sudoku
         end
     end
     methods(Access = protected)
-        function Solution = solveSudoku(obj,M)
+        function [Solution,nsize] = solveSudoku(obj,M)
         % main program:
             %           *--------------ERROR MESSAGES-------------*
     
@@ -92,13 +92,17 @@ classdef sudoku
             if ismatrix(M)
                 Solution=0*M; % clear out the solution matrix
                 [M,imp,Solution]=obj.recurse(M,Solution); %#ok need this syntax for recursion
-                
+                if imp % if impossible, quit
+                    assert(false,'sudoku:recurse:Assertion No possible solution')
+                end
             else 
                 assert(false,'sudoku:solveSudoku:Assertion Not a Matrix')
             end
             
             Solution=Solution(:,:,2:end);
-            Solution = mat2str(Solution);
+            nsize = size(Solution);
+            %Solution = mat2str(Solution);
+            return
         end
 
         % ----------
@@ -108,7 +112,7 @@ classdef sudoku
         %clc;disp(M);pause(.1)
             [M,imp]=obj.deduce(M); % perform deterministic deductions
             if imp % if impossible, quit
-                assert(false,'sudoku:recurse:Assertion No possible solution')
+                return
             end
         
             z=find(~M(:)); % indices of unsolved entries
@@ -125,7 +129,7 @@ classdef sudoku
             
             imp=all(impall);
             M=Q;
-            disp(M)
+            return
         end
 
         % ----------
@@ -147,13 +151,13 @@ classdef sudoku
                 end
                 if any(any(sum(N,3)<1))
                     imp=1; % impossible flag (no solution)
-                
+                    return
                 end
                 [r,c]=find(sum(N,3)<2); % solved entries
                 for n=1:length(r)
                     if any(any(sum(N,3)<1))
                         imp=1; %impossible flag (no solution)
-                        
+                        return
                     end
                     v = find(N(r(n),c(n),:)); % value of the entry
                     if isempty(v)
@@ -217,6 +221,7 @@ classdef sudoku
                     end
                 end
             end
+            return
         end
     end
 end
