@@ -178,8 +178,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
             
             ir = 1:9;
             ic = reshape(ir,3,3)';
-            A = 1 + mod(bsxfun(@plus,ir,ic(:)),9);
-            
+            A = 1 + mod((ir+ic(:)),9);
             p = randperm(9,9);
             
             r = bsxfun(@plus,randperm(3,3),3*(randperm(3,3)-1)');
