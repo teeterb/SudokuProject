@@ -19,7 +19,8 @@ classdef sudoku < handle
        
         SudokuPuzzle;
         title;
-        MatrixGrid;
+        MatrixPrint;
+        
     end
     
     
@@ -76,23 +77,44 @@ classdef sudoku < handle
     end
     methods(Access = protected)
         
-        function createGrid(obj)
+        function createGrid(obj,gameBoard)
             Window=get(0,'ScreenSize');
             display=figure('Name','Sudoku','NumberTitle','off','Resize','on','menubar','none',...
                 'Units','pixels','position',[1.85*(Window(4)-700),1.85*(Window(4)-700),600,600]);
 
             %The title textbox
             obj.title = uicontrol('Style', 'text', 'unit', 'pixels', 'string', 'Sudoku',...
-            'Position',[0 550  550 30], 'Horizontalalignment', 'center',...
+            'Position',[0 550  600 30], 'Horizontalalignment', 'center',...
             'FontSize',20, 'foregroundcolor','k','FontName', 'constantia',...
             'FontWeight', 'normal');
+            MatrixGrid = zeros(9,9);
+            for r=1:9
+                for c=1:9
+                    up=(ceil(c/3)-2)*0.025;
+                    across=(ceil(r/3)-2)*0.025;
+                    MatrixGrid(r,c)=uicontrol('Parent',display,'Style','edit','String','','Enable',...
+                    'on','Units','normalized','position',[0.0825+0.065*r+across,0.855-0.075*c-up,0.075,0.075]);
+                end
+            end
+            for r=1:9 %rows
+                for c=1:9 %columns
+                    if gameBoard(r,c) > 0 %if a number other than zero is found in the current row and column of the matrix
+                        set(MatrixGrid(r,c),'String',num2str(gameBoard(r,c)),'fontsize',20) %display it on the board
+                    else
+                        set(MatrixGrid(r,c),'String','','fontsize',20); 
+                        %if a zero is found in the current row and column of the matrix, change it to an 
+                        %empty string which becomes an empty cell that the user will input their guess into
+                    end
+                    
+                end
+            end
             
         end
         
         function Solution = solveSudoku(obj,M)
         % main program:
             %           *--------------ERROR MESSAGES-------------*
-    
+            
             if ndims(M)~=2
                 assert(false,'sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
             
@@ -116,7 +138,9 @@ classdef sudoku < handle
             end
             
             Solution=Solution(:,:,2:end);
-           
+
+            Solution1 = Solution(:,:,1);
+            %obj.createGrid(Solution1);
             return
         end
 

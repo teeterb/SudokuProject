@@ -114,7 +114,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                 Solved = sudoku(unsolved);
             catch ME
                 validdata = false;
-                cprintf('r','\n%s \n',ME.message);
+                cprintf('r','\n%s %d %d %d %d %d %d %d %d %d\n',ME.message,unsolved);
                 
                 switch ME.message
                     case char('sudoku:solveSudoku:Assertion Not a Matrix')
@@ -131,25 +131,23 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                         rethrow(ME);
                 end
             end
-            
-            txt = sprintf('TestSudokuSolver:testConstructorArguments: \n');
+            A = Solved.GetMatrix;
+            sizeA = size(A,3);
+            txt = sprintf('TestSudokuSolver:testConstructorArguments: %d %d %d %d %d %d %d %d %d\n',A);
             
             if validdata
                 testCase.numOfvalidSolutions = testCase.numOfvalidSolutions + 1;
-               
                 testCase.verifyTrue(isa(Solved,'sudoku'));
-                A = Solved.GetMatrix;
-                sizeA = size(A,3);
                 testCase.numOfvalidSolutions = sizeA;
-                for sizeSolved = 1:size(A,3)
-                    
-                    if sizeSolved < 10
+                if sizeA < 10
+                    for sizeSolved = 1:size(A,3)
                         testCase.verifyTrue(ismatrix(A(1:9,1:9,sizeSolved)),txt);
-                    else
-                        testCase.verifyTrue(ismatrix(A(1:9,1:9,10)),txt);
                     end
-                        
+                else
+                    testCase.verifyTrue(ismatrix(A(1:9,1:9,10)),txt);
                 end
+                        
+                 
                 %verify true that its all non-zero
                 
                 existf = true;
