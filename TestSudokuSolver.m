@@ -150,19 +150,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
                  
                 %verify true that its all non-zero
                 
-                existf = true;
-                if exist('SolvedSudoku.txt','file')
-                    existf = false;
-                end
-                fileID = fopen('SolvedSudoku.txt','a');
                 
-                if existf
-                    fprintf(fileID,'%12s\n','Solved Sudokus');
-                end
-                S = A(1:9,1:9,1);
-                fprintf(fileID,'\n\n-Newest Solution-\n');
-                fprintf(fileID,'\n%d %d %d %d %d %d %d %d %d',S);
-                fclose(fileID);
             end
             
         end
@@ -230,7 +218,7 @@ classdef TestSudokuSolver < matlab.unittest.TestCase
         % Creates an invalid puzzle, to test how the class handles it. 
         %
         
-           M = testCase.createSudoku;
+           %M = testCase.createSudoku;
         end
     end
     

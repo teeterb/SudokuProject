@@ -100,10 +100,6 @@ classdef sudoku < handle
                 for c=1:9 %columns
                     if gameBoard(r,c) > 0 %if a number other than zero is found in the current row and column of the matrix
                         set(MatrixGrid(r,c),'String',num2str(gameBoard(r,c)),'fontsize',20) %display it on the board
-                    else
-                        set(MatrixGrid(r,c),'String','','fontsize',20); 
-                        %if a zero is found in the current row and column of the matrix, change it to an 
-                        %empty string which becomes an empty cell that the user will input their guess into
                     end
                     
                 end
@@ -114,7 +110,7 @@ classdef sudoku < handle
         function Solution = solveSudoku(obj,M)
         % main program:
             %           *--------------ERROR MESSAGES-------------*
-            
+            Unsolved = M;
             if ndims(M)~=2
                 assert(false,'sudoku:solveSudoku:Assertion Input matrix must be two dimensional.')
             
@@ -139,9 +135,26 @@ classdef sudoku < handle
             
             Solution=Solution(:,:,2:end);
             
-%             Solution1 = Solution(:,:,1);
-%             obj.createGrid(Solution1);
-            return
+             Solution1 = Solution(:,:,1);
+             obj.createGrid(Solution1);
+             obj.createGrid(Unsolved);
+            
+            existf = true;
+                if exist('SolvedSudoku.txt','file')
+                    existf = false;
+                end
+                fileID = fopen('SolvedSudoku.txt','a');
+                
+                if existf
+                    fprintf(fileID,'%12s\n','Solved Sudokus');
+                end
+                
+                fprintf(fileID,'\n\n----Puzzle----\n');
+                fprintf(fileID,'\n%d %d %d %d %d %d %d %d %d',Unsolved);
+                fprintf(fileID,'\n\n---Solution---\n');
+                fprintf(fileID,'\n%d %d %d %d %d %d %d %d %d',Solution1);
+                fclose(fileID);
+            
         end
 
         % ----------
